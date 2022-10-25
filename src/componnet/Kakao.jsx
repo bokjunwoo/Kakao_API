@@ -85,7 +85,7 @@ export default function Kakao() {
         // 선을 굵기
         strokeWeight: 3,
         // 선의 색
-        strokeColor: 'red',
+        strokeColor: 'blue',
         // 선의 불투명도
         strokeOpacity: 1,
         // 선의 스타일
@@ -164,6 +164,19 @@ export default function Kakao() {
             )
           })
         }
+        <br></br>
+        <br></br>
+        <button onClick={() => {
+          // usestate의 { list } 를 보낸다
+          axios.post('http://localhost:4000/plan', { list })
+          .then((결과) => {
+            // 백엔드 콘솔 결과
+            console.log(결과)
+          })
+          .catch(() => {
+            console.log('실패')
+          })
+        }}>저장</button>
       </RowDiv>
     </>
   )
