@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux';
 
 const InputText = styled.input`
   width: 200px;
@@ -10,6 +11,8 @@ const InputText = styled.input`
 const formData = new FormData();
 
 export default function Detail() {
+  const nickName = useSelector(state => state.users.userNickName);
+  
   // 제목
   const titleRef = useRef();
   // 내용
@@ -30,11 +33,11 @@ export default function Detail() {
 
   const [emendId, setEmendId] = useState([])
 
-  const imgRef = useRef();
+  // const imgRef = useRef();
 
-  const handleImg = (e) => {
-    formData.append('img', e.target.files[0])
-  }
+  // const handleImg = (e) => {
+  //   formData.append('img', e.target.files[0])
+  // }
 
   useEffect(() => {
     const reqPost = async () => {
@@ -47,7 +50,7 @@ export default function Detail() {
   useEffect(() => {
     axios.get(`http://localhost:4000/review/${contentId}`)
     .then((result) => {
-      console.log(result.data)
+      console.log(result)
       setReview(result.data)
     })
     .catch(() => {
@@ -68,45 +71,34 @@ export default function Detail() {
 
   return (
     <>
+      <div>
+        {`회원인 ${nickName}씨`}
+      </div>
       <div>{tourData.title}</div>
-      <p>조회순</p>
-      <p>좋아요</p>
-      <p>별점</p>
-      <button onClick={() => {
-        console.log(tourData.contentid)
-
-        axios.get(`http://localhost:4000/item/${tourData.contentid}`)
-        .then((결과) => {
-          // 백엔드 콘솔 결과
-          console.log(결과)
-          console.log('성공')
-        })
-        .catch(() => {
-          console.log('실패')
-        })
-      }}>생성</button>
       
-      <form>
+      <div>
         <h1>여긴 리뷰쓰는 곳</h1>
         <InputText type="text" ref={titleRef} />
         <InputText type="text" ref={contentRef} />
-        <input class="mt-3" type="file" name="img" ref={imgRef} onChange={handleImg}/>
+        {/* <input class="mt-3" type="file" name="img" ref={imgRef} onChange={handleImg}/> */}
         <span onClick={() => {
           setStar(star + 1) 
         }}>{star}</span>
         
         <button type='button' onClick={() => {
-          const title = titleRef.current.value
           const content = contentRef.current.value
 
-          fetch('http://localhost:4000/review/img', {
-            method: 'post',
-            headers: {},
-            body: formData,
-          })
-          .then((결과) => 결과.json())
-          .then((data) => {
-            axios.post('http://localhost:4000/review/write', [{title, content, contentId, star, data}])
+          // fetch('http://localhost:4000/review/img', {
+          //   method: 'post',
+          //   headers: {},
+          //   body: formData,
+          // })
+          // .then((결과) => 결과.json())
+
+          // .then((data) => {
+            
+          // })
+          axios.post('http://localhost:4000/review/write', [{nickName, content, contentId, star}])
             .then((결과) => {
               // 백엔드 콘솔 결과
               console.log(결과)
@@ -115,9 +107,8 @@ export default function Detail() {
             .catch(() => {
               console.log('실패')
             })
-          })
         }}>저장</button>
-      </form>
+      </div>
 
       <div>
         <h1>여긴 수정하는 곳</h1>
@@ -138,17 +129,16 @@ export default function Detail() {
       <div>
         {
           review.map(function(a, i) {
-            const review = a.review[0]
             return (
               <>
-                <p key={review._id}>제목 : {review.title} 내용 : {review.content} 별점 : {review.star}</p>
+                <p key={a._id}>제목 : {a.title} 내용 : {a.content} 별점 : {a.star}</p>
                 <img src="" alt="" />
                 <button onClick={() => {
                   axios.get(`http://localhost:4000/review/emend/${a._id}`)
                   .then((결과) => {
                     console.log('성공')
-                    setEmendTitle(결과.data.review[0].title)
-                    setEmendContent(결과.data.review[0].content)
+                    setEmendTitle(결과.data.title)
+                    setEmendContent(결과.data.content)
                     setEmendId(결과.data._id)
                   })
                   .catch(() => {
@@ -157,7 +147,7 @@ export default function Detail() {
                 }}>수정하기</button>
 
                 <button onClick={() => {
-                  axios.delete(`http://localhost:4000/review/delete/${a._id}`, [a._id])
+                  axios.delete(`http://localhost:4000/review/delete/${a._id}`)
                   .then((결과) => {
                     console.log(결과)
                     console.log('성공')
@@ -171,7 +161,7 @@ export default function Detail() {
           })
         }
       </div>
-
+        <button onClick={() => {console.log(nickName)}}>qq</button>
     </>
   )
 }
