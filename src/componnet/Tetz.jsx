@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/modules/users';
 import styled from 'styled-components'
@@ -9,19 +9,11 @@ const InputText = styled.input`
 `
 
 export default function Tetz() {
-  const [loginCondition, setLoginCondition] = useState({
-    condition: false,
-    msg: '회원 정보를 정확하게 입력하세요!',
-  });
-  const [openDialog, setOpenDialog] = useState(false);
-
   const dispatch = useDispatch();
 
   const loginId = useRef();
   const loginPw = useRef();
   async function loginUser() {
-
-    setOpenDialog(false);
 
     const loginInfo = {
       email: loginId.current.value,
@@ -47,16 +39,9 @@ export default function Tetz() {
           dispatch(login(result));
         }
 
-        setLoginCondition({
-          condition: result.result,
-          msg: result.msg,
-        });
-
-        setOpenDialog(true);
       } else {
         throw new Error('로그인 실패');
       }
-    } else {
     }
   }
   return (

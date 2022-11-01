@@ -7,12 +7,16 @@ import Detail from "./componnet/Detail";
 import Login from "./componnet/Login";
 // import KakaoMap from "./componnet/KakaoMap";
 import Tetz from './componnet/Tetz';
+import ShareFacebook from './componnet/ShareFacebook';
+import ShareUrl from './componnet/ShareUrl';
 
 function App() {
 
   return (
     <>
-    {/* <Login /> */}
+    <ShareFacebook />
+    <ShareUrl />
+    <Login />
     <Tetz />
       {/* 
       <List />

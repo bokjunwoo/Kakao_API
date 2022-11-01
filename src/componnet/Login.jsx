@@ -8,7 +8,6 @@ const InputText = styled.input`
   height: 50px;
 `
 
-
 export default function Login() {
   const idRef = useRef();
   const pwRef = useRef();
@@ -79,7 +78,7 @@ export default function Login() {
           const email = loginId.current.value
           const password = loginPw.current.value
 
-          const dd = axios.post('http://localhost:4000/user/login', { email, password })
+          axios.post('http://localhost:4000/user/login', { email, password })
             .then((result) => {
               console.log(result.data)
               setss(result.data)
