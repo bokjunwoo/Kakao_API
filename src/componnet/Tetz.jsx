@@ -46,6 +46,7 @@ export default function Tetz() {
   }
   return (
     <>
+      <h1>로그인하기</h1>
       <InputText type="text" ref={loginId}></InputText>
       <InputText type="text" ref={loginPw}></InputText>
       <button onClick={() => loginUser()}>로그인</button>

@@ -10,7 +10,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import logger from 'redux-logger'
 import App from './App';
 
-
 const reduxDevTool =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux';
+import ShareKakao from './ShareKakao';
 
 const InputText = styled.input`
   width: 200px;
@@ -12,7 +13,15 @@ const formData = new FormData();
 
 export default function Detail() {
   const nickName = useSelector(state => state.users.userNickName);
-  
+
+  // 이미지 사용
+  const imgRef = useRef();
+
+  // 이미지 함수
+  const handleImg = (e) => {
+    formData.append('img', e.target.files[0])
+  }
+
   // 제목
   const titleRef = useRef();
   // 내용
@@ -33,11 +42,7 @@ export default function Detail() {
 
   const [emendId, setEmendId] = useState([])
 
-  // const imgRef = useRef();
-
-  // const handleImg = (e) => {
-  //   formData.append('img', e.target.files[0])
-  // }
+  const [allStar, setAllStar] = useState([])
 
   useEffect(() => {
     const reqPost = async () => {
@@ -67,12 +72,12 @@ export default function Detail() {
       console.log('실패')
     })
   }, [contentId])
-
-
+  
   return (
     <>
+      <img src="http://localhost:4000/uploads/img_1667456613828" alt="" />
       <div>
-        {`회원인 ${nickName}씨`}
+        {nickName}
       </div>
       <div>{tourData.title}</div>
       
@@ -80,7 +85,7 @@ export default function Detail() {
         <h1>여긴 리뷰쓰는 곳</h1>
         <InputText type="text" ref={titleRef} />
         <InputText type="text" ref={contentRef} />
-        {/* <input class="mt-3" type="file" name="img" ref={imgRef} onChange={handleImg}/> */}
+        <input class="mt-3" type="file" name="img" ref={imgRef} onChange={handleImg}/>
         <span onClick={() => {
           setStar(star + 1) 
         }}>{star}</span>
@@ -88,17 +93,14 @@ export default function Detail() {
         <button type='button' onClick={() => {
           const content = contentRef.current.value
 
-          // fetch('http://localhost:4000/review/img', {
-          //   method: 'post',
-          //   headers: {},
-          //   body: formData,
-          // })
-          // .then((결과) => 결과.json())
-
-          // .then((data) => {
-            
-          // })
-          axios.post('http://localhost:4000/review/write', [{nickName, content, contentId, star}])
+          fetch('http://localhost:4000/review/img', {
+            method: 'post',
+            headers: {},
+            body: formData,
+          })
+          .then((결과) => 결과.json())
+          .then((data) => {
+            axios.post('http://localhost:4000/review/write', [{nickName, content, contentId, star, img : data}])
             .then((결과) => {
               // 백엔드 콘솔 결과
               console.log(결과)
@@ -107,6 +109,8 @@ export default function Detail() {
             .catch(() => {
               console.log('실패')
             })
+          })
+        
         }}>저장</button>
       </div>
 
@@ -115,7 +119,7 @@ export default function Detail() {
         <InputText type="text" value={emendTitle} onChange={(event) => {setEmendTitle(event.target.value)}}/>
         <InputText type="text" value={emendContent} onChange={(event) => {setEmendContent(event.target.value)}}/>
         <button onClick={() => {
-           axios.post(`http://localhost:4000/review/emend/${emendId}`, [{emendId, emendTitle, emendContent}])
+           axios.post(`http://localhost:4000/review/emend`, [{emendId, emendTitle, emendContent, nickName}])
            .then((결과) => {
              console.log(결과)
              console.log('성공')
@@ -131,8 +135,7 @@ export default function Detail() {
           review.map(function(a, i) {
             return (
               <>
-                <p key={a._id}>제목 : {a.title} 내용 : {a.content} 별점 : {a.star}</p>
-                <img src="" alt="" />
+                <p key={a._id}>제목 : {a.title} 내용 : {a.content} 별점 : {a.star} 닉네임 : {a.nickName}</p>
                 <button onClick={() => {
                   axios.get(`http://localhost:4000/review/emend/${a._id}`)
                   .then((결과) => {
@@ -161,7 +164,8 @@ export default function Detail() {
           })
         }
       </div>
-        <button onClick={() => {console.log(nickName)}}>qq</button>
+
+      <ShareKakao tourData={tourData} />
     </>
   )
 }

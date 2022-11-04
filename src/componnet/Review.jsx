@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components'
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
 const InputText = styled.input`
   width: 200px;
@@ -8,6 +9,8 @@ const InputText = styled.input`
 `
 
 export default function Review() {
+  const nickName = useSelector(state => state.users.userNickName);
+
   // input에 입력한 값
   const titleRef = useRef();
   const contentRef = useRef();

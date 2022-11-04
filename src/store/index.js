@@ -3,6 +3,7 @@ import { persistReducer } from "redux-persist";
 import storageSession from 'redux-persist/lib/storage/session';
 
 import users from './modules/users';
+import tourapi from './modules/tourapi';
 
 const persistConfig = {
   key: "user",
@@ -13,7 +14,7 @@ const persistConfig = {
 };
 
 export const rootReducer = combineReducers({
-  users,
+  users, tourapi,
 });
 
 export default persistReducer(persistConfig, rootReducer);

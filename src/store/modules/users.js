@@ -20,6 +20,7 @@ export function logout() {
 const initState = {
   userEmail: '',
   userNickName: '',
+  userImg: '',
   isLogin: false,
 };
 
@@ -34,6 +35,7 @@ export default function users(state = initState, action) {
         ...state,
         userEmail: action.payload.email,
         userNickName: action.payload.nickName,
+        userImg: action.payload.img,
         isLogin: true,
       };
     case LOGOUT:
